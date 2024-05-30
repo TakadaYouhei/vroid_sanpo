@@ -17,27 +17,34 @@ function main()
   
 	// 認証情報読み込み
 	// ⚠️認証情報を公開するのは本来はNG。ローカルテスト用の実装。
-	// js を読み込んだhymlから見た JSONファイルのURL
-var url = 'secret/credential.json';
-
-// fetchを使用してJSONファイルを読み込む
-fetch(url)
-  .then(response => {
-    // レスポンスが正常かチェック
-    if (!response.ok) {
-      throw new Error('ネットワークレスポンスが正常ではありません');
-    }
-    // レスポンスをJSONとして解析
-    return response.json();
-  })
-  .then(data => {
-    // 解析されたJSONデータを使用
-    console.log(data);
-  })
-  .catch(error => {
-    // エラー処理
-		console.error('読み込み中にエラーが発生しました:', error);
-  });
+  var txt_application_id = document.getElementById("txt_application_id");
+  var txt_secret = document.getElementById("txt_secret");
+  var btn_get_credential = document.getElementById("btn_get_credential");
+  btn_get_credential.addEventListener("click", function(){
+  	// js を読み込んだhymlから見た JSONファイルのURL
+    var url = 'secret/credential.json';
+    
+    // fetchを使用してJSONファイルを読み込む
+    fetch(url)
+      .then(response => {
+        // レスポンスが正常かチェック
+        if (!response.ok) {
+          throw new Error('ネットワークレスポンスが正常ではありません');
+        }
+        // レスポンスをJSONとして解析
+        return response.json();
+      })
+      .then(data => {
+        // 解析されたJSONデータを使用
+        // console.log(data);
+        txt_application_id.value = data.application_id;
+        txt_secret.value = data.secret;
+      })
+      .catch(error => {
+        // エラー処理
+    		console.error('読み込み中にエラーが発生しました:', error);
+      });
+    });
 
 }
 
