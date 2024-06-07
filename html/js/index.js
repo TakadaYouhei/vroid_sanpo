@@ -61,7 +61,7 @@ function main()
       code: txt_auth_code.value,
     };
     var txt_params = JSON.stringify(params);
-    console.log(txt_params);
+    //console.log(txt_params);
     /*
     fetch(url, {
       method:"post",
@@ -84,19 +84,20 @@ function main()
     });
     */
     try {
-      const responce = await fetch(url, {
-        method:"post",
-        headers:{
-          "Content-Type": "application/json",
-          "X-Api-Version": "11",
-        },
-        body: txt_params,
+      url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode=1000001";
+      fetch(url, {
+        method:"get",
+        
+      }).then(response => {
+        console.log("ok");
+      }).catch(error =>{
+        console.error("error", error);
       });
-      console.log("ok");
+      console.log("ok?");
     } catch(error) {
       console.error("Error:", error);
     }
-
+  });
 }
 
 
