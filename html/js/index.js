@@ -2,6 +2,7 @@
 
 function main()
 {
+  var base_url = "https://hub.vroid.com";
   // ペーストボタン
   var btn_code_paste = document.getElementById("btn_code_paste");
   var txt_auth_code = document.getElementById("txt_auth_code");
@@ -19,6 +20,7 @@ function main()
 	// ⚠️認証情報を公開するのは本来はNG。ローカルテスト用の実装。
   var txt_application_id = document.getElementById("txt_application_id");
   var txt_secret = document.getElementById("txt_secret");
+  var txt_redirect_uri = document.getElementById("txt_redirect_uri");
   var btn_get_credential = document.getElementById("btn_get_credential");
   btn_get_credential.addEventListener("click", function(){
   	// js を読み込んだhymlから見た JSONファイルのURL
@@ -39,12 +41,61 @@ function main()
         // console.log(data);
         txt_application_id.value = data.application_id;
         txt_secret.value = data.secret;
+        txt_redirect_uri.value = data.redirect_uri;
       })
       .catch(error => {
         // エラー処理
     		console.error('読み込み中にエラーが発生しました:', error);
       });
+  });
+ 
+  // アクセストークンの取得
+  var btn_get_access_token = document.getElementById("btn_get_access_token");
+  btn_get_access_token.addEventListener("click", function(){
+    var url = base_url + "/oauth/token";
+    var params = {
+      client_id: txt_application_id.value,
+      client_secret: txt_secret.value,
+      redirect_uri: txt_redirect_uri.value,
+      grant_type: "authorization_code",
+      code: txt_auth_code.value,
+    };
+    var txt_params = JSON.stringify(params);
+    console.log(txt_params);
+    /*
+    fetch(url, {
+      method:"post",
+      headers:{
+        "Content-Type": "application/json",
+        "X-Api-Version": "11"
+      },
+      body: txt_params
+    })
+      .then(response => {
+        console.log("success.");
+        return response.text();
+      })
+      .then(data => {
+        console.log(data.text());
+      }).catch(error => {
+        console.error(error.message);
+        console.error("token の取得に失敗しました", error);
+      });
     });
+    */
+    try {
+      const responce = await fetch(url, {
+        method:"post",
+        headers:{
+          "Content-Type": "application/json",
+          "X-Api-Version": "11",
+        },
+        body: txt_params,
+      });
+      console.log("ok");
+    } catch(error) {
+      console.error("Error:", error);
+    }
 
 }
 
