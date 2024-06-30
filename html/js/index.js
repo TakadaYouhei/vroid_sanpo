@@ -62,7 +62,6 @@ function main()
     };
     var txt_params = JSON.stringify(params);
     //console.log(txt_params);
-    /*
     fetch(url, {
       method:"post",
       headers:{
@@ -70,19 +69,16 @@ function main()
         "X-Api-Version": "11"
       },
       body: txt_params
-    })
-      .then(response => {
+      }).then(response => {
         console.log("success.");
         return response.text();
-      })
-      .then(data => {
+      }).then(data => {
         console.log(data.text());
       }).catch(error => {
         console.error(error.message);
         console.error("token の取得に失敗しました", error);
       });
-    });
-    */
+    /* これは ok
     try {
       url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode=1000001";
       fetch(url, {
@@ -97,6 +93,7 @@ function main()
     } catch(error) {
       console.error("Error:", error);
     }
+    */
   });
 }
 
