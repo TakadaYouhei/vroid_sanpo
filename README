@@ -4,5 +4,12 @@ vroid hub 開発者のアプリページから credential を作成して
 html/secret/credential.json
 に保存
 
-simple.min.css
+
+外部モジュール
+
+vendor/kevquirk/simple.css/simple.min.css
 https://github.com/kevquirk/simple.css
+
+
+vendor/mrdoob/three.js/
+https://github.com/mrdoob/three.js
