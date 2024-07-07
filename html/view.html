@@ -14,13 +14,16 @@
     {
       "imports": {
           "three": "./vendor/mrdoob/three.js/three.module.min.js",
-          "gltfloader": "./vendor/mrdoob/three.js/examples/jsm/loaders/GLTFLoader.js"
+          "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/",
+          "@pixiv/three-vrm": "./vendor/pixiv/three-vrm/three-vrm.module.min.js"
       }
     }
     </script>
     <script type="module">
         import * as THREE from 'three';
-        import { GLTFLoader } from 'gltfloader';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { VRMLoaderPlugin } from '@pixiv/three-vrm';
+        import { VRMSchema } from "@pixiv/three-vrm";
                
         // シーンの準備
         const scene = new THREE.Scene();
@@ -48,6 +51,9 @@
         
         const loader = new GLTFLoader();
         
+        loader.register((parser)=>{
+          return new VRMLoaderPlugin(parser);
+        })
         
         loader.load(
 
@@ -56,41 +62,51 @@
 
             // called when the resource is loaded
             (gltf) => {
+              
+              //console.log('gltf loaded.');
+              //console.log(typeof(gltf));
+              //console.log(typeof(gltf.userData));
 
                 // generate a VRM instance from gltf
-                THREE.VRM.from(gltf).then((vrm) => {
+                const vrm = gltf.userData.vrm;
+                //console.log('vrm');
 
                     // add the loaded vrm to the scene
                     scene.add(vrm.scene);
+                    console.log('added');
 
                     // deal with vrm features
-                    console.log(vrm);
+                    //console.log(vrm);
 
                     // 筆者追記、両手を下ろす
                     normalPose(vrm);
+                    console.log('normalPoseed.');
 
                     // 筆者追記、笑顔に
                     vrm.blendShapeProxy.setValue(THREE.VRMSchema.BlendShapePresetName.Joy, 1.0)
                     vrm.blendShapeProxy.update()
 
-                });
+                  
 
             },
             // called while loading is progressing
-            (progress) => console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%'),
+            (progress) => {
+              //console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%');
+            },
 
             // called when loading has errors
             (error) => {
-              console.log('on error')
+              console.log('on error');
               console.error(error);
             }
 
         )
         
         const normalPose = (vrm) => {
-            const leftUpperArm = vrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.LeftUpperArm)
+          console.log("normalPose");
+            const leftUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)
             leftUpperArm.rotateZ(1.2)
-            const rightUpperArm = vrm.humanoid.getBoneNode(THREE.VRMSchema.HumanoidBoneName.RightUpperArm)
+            const rightUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.RightUpperArm)
             rightUpperArm.rotateZ(-1.2)
         }
 
