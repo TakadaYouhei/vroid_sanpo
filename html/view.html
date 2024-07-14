@@ -23,7 +23,7 @@
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { VRMLoaderPlugin } from '@pixiv/three-vrm';
-        import { VRMSchema } from "@pixiv/three-vrm";
+        //import { VRMSchema } from "@pixiv/three-vrm";
                
         // シーンの準備
         const scene = new THREE.Scene();
@@ -97,6 +97,10 @@
             // called when loading has errors
             (error) => {
               console.log('on error');
+              console.log(typeof error)
+              console.log(Object.getOwnPropertyNames(error))
+              console.log(error.message)
+              console.log(error.stack)
               console.error(error);
             }
 
@@ -104,10 +108,27 @@
         
         const normalPose = (vrm) => {
           console.log("normalPose");
-            const leftUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)
-            leftUpperArm.rotateZ(1.2)
-            const rightUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.RightUpperArm)
-            rightUpperArm.rotateZ(-1.2)
+            //const leftUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)
+            let leftUpperArm = vrm.humanoid.getNormalizedBoneNode("LeftUpperArm")
+            console.log("normalPose 2");
+            console.log(typeof leftUpperArm)
+            //console.log(JSON.stringify(vrm))
+            //console.log(JSON.stringify(leftUpperArm))
+            console.log(Object.getOwnPropertyNames(vrm))
+            console.log(Object.getOwnPropertyNames(leftUpperArm))
+            //for (key in leftUpperArm){
+            //  console.log(key)
+            //}
+            console.log(typeof leftUpperArm.rotation)
+            //leftUpperArm.rotateZ(1.2)
+            leftUpperArm.rotation.z = 1.2;
+            console.log("3")
+            const rightUpperArm = vrm.humanoid.getNormalizedBoneNode("RightUpperArm")
+            console.log("4")
+            rightUpperArm.rotation.z = -1.2;
+            console.log("5")
+            vrm.humanoid.update()
+            console.log("normalPose finished.")
         }
 
 
