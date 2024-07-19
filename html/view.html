@@ -24,7 +24,33 @@
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { VRMLoaderPlugin } from '@pixiv/three-vrm';
         //import { VRMSchema } from "@pixiv/three-vrm";
-               
+        
+        const logHumanoidBones = (vrm) => {
+          console.log('logHumanoidBones called.')
+          if (!vrm) {
+            console.log('vrm is null.')
+            return
+          }
+          console.log('vrm is not null.')
+          if (!vrm.humanoid) {
+            console.log('vrm.humanoid is null')
+            return
+          }
+          console.log('humanoid is not null.')
+          if (!vrm.humanoid.humanBones) {
+            console.log('vrm.humanoid.humanBones is null.')
+            return
+          }
+          console.log('humanBones is not null.')
+          const bones = vrm.humanoid.humanBones;
+          console.log(typeof bones)
+          console.log(bones.length)
+          for (const bone in bones) {
+            console.log(bone + ':' + bones[bone].name)
+          }
+          console.log('logHumanoidBones finished.')
+        }
+        
         // シーンの準備
         const scene = new THREE.Scene();
         
@@ -47,7 +73,7 @@
         directionalLight.position.set(1, 1, 1)
         scene.add(directionalLight)
 
-        
+        let currentGltf = undefined;
         
         const loader = new GLTFLoader();
         
@@ -77,15 +103,21 @@
 
                     // deal with vrm features
                     //console.log(vrm);
+                    logHumanoidBones(vrm)
 
                     // 筆者追記、両手を下ろす
-                    normalPose(vrm);
-                    console.log('normalPoseed.');
+                    //意味なし//vrm.update()
+                    //意味なし//vrm.humanoid.normalizedHumanBones();
+                    //normalPose(vrm);
+                    //console.log('normalPoseed.');
 
                     // 筆者追記、笑顔に
-                    vrm.blendShapeProxy.setValue(THREE.VRMSchema.BlendShapePresetName.Joy, 1.0)
-                    vrm.blendShapeProxy.update()
+                    //vrm.blendShapeProxy.setValue(THREE.VRMSchema.BlendShapePresetName.Joy, 1.0)
+                    //vrm.blendShapeProxy.update()
 
+                    currentGltf = gltf;
+                    
+                    console.log('currentGltf setted.')
                   
 
             },
@@ -101,7 +133,7 @@
               console.log(Object.getOwnPropertyNames(error))
               console.log(error.message)
               console.log(error.stack)
-              console.error(error);
+              //console.error(error);
             }
 
         )
@@ -115,18 +147,20 @@
             //console.log(JSON.stringify(vrm))
             //console.log(JSON.stringify(leftUpperArm))
             console.log(Object.getOwnPropertyNames(vrm))
-            console.log(Object.getOwnPropertyNames(leftUpperArm))
+            //console.log(Object.getOwnPropertyNames(leftUpperArm))
             //for (key in leftUpperArm){
             //  console.log(key)
             //}
-            console.log(typeof leftUpperArm.rotation)
+            //console.log(typeof leftUpperArm.rotation)
             //leftUpperArm.rotateZ(1.2)
-            leftUpperArm.rotation.z = 1.2;
-            console.log("3")
-            const rightUpperArm = vrm.humanoid.getNormalizedBoneNode("RightUpperArm")
-            console.log("4")
-            rightUpperArm.rotation.z = -1.2;
-            console.log("5")
+            if (leftUpperArm){
+              leftUpperArm.rotation.z = 1.2;
+              console.log("3")
+              const rightUpperArm = vrm.humanoid.getNormalizedBoneNode("RightUpperArm")
+              console.log("4")
+              rightUpperArm.rotation.z = -1.2;
+              console.log("5")
+            }
             vrm.humanoid.update()
             console.log("normalPose finished.")
         }
@@ -134,7 +168,15 @@
 
         // アニメーションループの開始
         function tick() {
+            
+            
+            if (currentGltf){
+              normalPose(currentGltf.userData.vrm)
+              //return
+            }
+            
             requestAnimationFrame(tick)
+            
             renderer.render(scene, camera)
         }
         tick()
