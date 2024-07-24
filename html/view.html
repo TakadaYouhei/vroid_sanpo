@@ -51,6 +51,32 @@
           console.log('logHumanoidBones finished.')
         }
         
+        const logHumanoidNormalizedBones = (vrm) => {
+          console.log('logHumanoidNormalizedBones called.')
+          if (!vrm) {
+            console.log('vrm is null.')
+            return
+          }
+          console.log('vrm is not null.')
+          if (!vrm.humanoid) {
+            console.log('vrm.humanoid is null')
+            return
+          }
+          console.log('humanoid is not null.')
+          if (!vrm.humanoid.humanNormalizedBones) {
+            console.log('vrm.humanoid.humanNormalizedBones is null.')
+            return
+          }
+          console.log('humanBones is not null.')
+          const bones = vrm.humanoid.humanNormalizedBones;
+          console.log(typeof bones)
+          console.log(bones.length)
+          for (const bone in bones) {
+            console.log(bone + ':' + bones[bone].name)
+          }
+          console.log('logHumanoidNormalizedBones finished.')
+        }
+        
         // シーンの準備
         const scene = new THREE.Scene();
         
@@ -104,6 +130,7 @@
                     // deal with vrm features
                     //console.log(vrm);
                     logHumanoidBones(vrm)
+                    logHumanoidNormalizedBones(vrm)
 
                     // 筆者追記、両手を下ろす
                     //意味なし//vrm.update()
@@ -171,7 +198,7 @@
             
             
             if (currentGltf){
-              normalPose(currentGltf.userData.vrm)
+              //normalPose(currentGltf.userData.vrm)
               //return
             }
             
