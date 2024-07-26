@@ -20,13 +20,14 @@
 
 	<body>
 		<script type="importmap">
-			{
-				"imports": {
-					"three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
-					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
-					"@pixiv/three-vrm-core": "../lib/three-vrm-core.module.js"
-				}
-			}
+      
+      {
+        "imports": {
+            "three": "./vendor/mrdoob/three.js/three.module.min.js",
+            "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/",
+            "@pixiv/three-vrm-core": "./vendor/pixiv/three-vrm/three-vrm.module.min.js"
+        }
+      }
 		</script>
 
 		<script type="module">
@@ -74,7 +75,7 @@
 			loader.load(
 
 				// URL of the VRM you want to load
-				'./models/cube.gltf',
+				'asset/data01.vrm',
 
 				// called when the resource is loaded
 				( gltf ) => {
