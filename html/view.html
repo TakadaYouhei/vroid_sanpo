@@ -104,7 +104,7 @@
         const loader = new GLTFLoader();
         
         loader.register((parser)=>{
-          return new VRMLoaderPlugin(parser);
+          return new VRMLoaderPlugin(parser, { helperRoot: scene, autoUpdateHumanBones: true });
         })
         
         loader.load(
