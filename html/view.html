@@ -125,13 +125,12 @@
 
                     // add the loaded vrm to the scene
                     scene.add(gltf.scene);
-                    console.log('added');
 
                     // deal with vrm features
                     //console.log(vrm);
                     normalPose(vrm);
-                    logHumanoidBones(vrm)
-                    logHumanoidNormalizedBones(vrm)
+                    //logHumanoidBones(vrm)
+                    //logHumanoidNormalizedBones(vrm)
 
                     // 筆者追記、両手を下ろす
                     //意味なし//vrm.update()
@@ -145,7 +144,7 @@
 
                     currentGltf = gltf;
                     
-                    console.log('currentGltf setted.')
+                    //console.log('currentGltf setted.')
                   
 
             },
@@ -167,30 +166,15 @@
         )
         
         const normalPose = (vrm) => {
-          console.log("normalPose");
-            //const leftUpperArm = vrm.humanoid.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)
-            let leftUpperArm = vrm.humanoid.getNormalizedBoneNode("leftUpperArm")
-            console.log("normalPose 2");
-            console.log(typeof leftUpperArm)
-            //console.log(JSON.stringify(vrm))
-            //console.log(JSON.stringify(leftUpperArm))
-            console.log(Object.getOwnPropertyNames(vrm))
-            //console.log(Object.getOwnPropertyNames(leftUpperArm))
-            //for (key in leftUpperArm){
-            //  console.log(key)
-            //}
-            //console.log(typeof leftUpperArm.rotation)
-            //leftUpperArm.rotateZ(1.2)
-            if (leftUpperArm){
+          //console.log("normalPose");
+          let leftUpperArm = vrm.humanoid.getNormalizedBoneNode("leftUpperArm")
+          if (leftUpperArm){
               leftUpperArm.rotation.z = 1.2;
-              console.log("3")
               const rightUpperArm = vrm.humanoid.getNormalizedBoneNode("rightUpperArm")
-              console.log("4")
               rightUpperArm.rotation.z = -1.2;
-              console.log("5")
-            }
-            vrm.humanoid.update()
-            console.log("normalPose finished.")
+          }
+          vrm.humanoid.update()
+          //console.log("normalPose finished.")
         }
 
 
