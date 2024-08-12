@@ -177,6 +177,23 @@
 
         )
         
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(stream => {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+      
+          // VideoTextureの作成
+          const videoTexture = new THREE.VideoTexture(video);
+      
+          // シーンの背景に設定
+          scene.background = videoTexture;
+        })
+        .catch(error => {
+          console.error('Error accessing media devices.', error);
+        });
+
+        
         const normalPose = (vrm) => {
           //console.log("normalPose");
           let leftUpperArm = vrm.humanoid.getNormalizedBoneNode("leftUpperArm")
