@@ -24,17 +24,14 @@
       {
         "imports": {
             "three": "./vendor/mrdoob/three.js/three.module.min.js",
-            "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/",
-            "@pixiv/three-vrm-core": "./vendor/pixiv/three-vrm/three-vrm.module.min.js"
-        }
+            "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/"
+          }
       }
 		</script>
 
 		<script type="module">
 			import * as THREE from 'three';
-			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 		  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { VRMCoreLoaderPlugin } from '@pixiv/three-vrm-core';
 
 			// renderer
 			const renderer = new THREE.WebGLRenderer();
@@ -60,41 +57,22 @@
 			light.position.set( 1.0, 1.0, 1.0 ).normalize();
 			scene.add( light );
 
-			// gltf and vrm
-			let currentGltf = undefined;
-
-			const loader = new GLTFLoader();
-			loader.crossOrigin = 'anonymous';
-
-			loader.register( ( parser ) => {
-
-				return new VRMCoreLoaderPlugin( parser, { helperRoot: scene, autoUpdateHumanBones: true } );
-
-			} );
-
-			loader.load(
-
-				// URL of the VRM you want to load
-				'asset/data01.vrm',
-
-				// called when the resource is loaded
-				( gltf ) => {
-
-					// put the model to the scene
-					scene.add( gltf.scene );
-					//console.log( gltf );
-
-					currentGltf = gltf;
-
-				},
-
-				// called while loading is progressing
-				( progress ) => console.log( 'Loading model...', 100.0 * ( progress.loaded / progress.total ), '%' ),
-
-				// called when loading has errors
-				( error ) => console.error( error )
-
-			);
+			// mesh
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      
+      const materials = [
+        new THREE.MeshBasicMaterial({ color: 0xff0000 }), // 赤
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // 緑
+        new THREE.MeshBasicMaterial({ color: 0x0000ff }), // 青
+        new THREE.MeshBasicMaterial({ color: 0xffff00 }), // 黄
+        new THREE.MeshBasicMaterial({ color: 0xff00ff }), // マゼンタ
+        new THREE.MeshBasicMaterial({ color: 0x00ffff })  // シアン
+      ];
+      
+      // キューブメッシュを作成
+      const cube = new THREE.Mesh(geometry, materials);
+      scene.add(cube);
+			
 
 			// helpers
 			const gridHelper = new THREE.GridHelper( 10, 10 );
@@ -111,21 +89,6 @@
 				requestAnimationFrame( animate );
 
 				const deltaTime = clock.getDelta();
-
-				if ( currentGltf ) {
-
-					const vrmCore = currentGltf.userData.vrmCore;
-					const humanoid = vrmCore.humanoid;
-
-					// tweak bones
-					const s = 0.25 * Math.PI * Math.sin( Math.PI * clock.elapsedTime );
-					humanoid.getNormalizedBoneNode( 'head' ).rotation.y = s;
-					humanoid.getNormalizedBoneNode( 'leftUpperArm' ).rotation.z = s;
-					humanoid.getNormalizedBoneNode( 'rightUpperArm' ).rotation.x = s;
-
-					vrmCore.update( deltaTime );
-
-				}
 
 				renderer.render( scene, camera );
 
