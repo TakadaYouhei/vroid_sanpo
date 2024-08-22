@@ -24,7 +24,7 @@ class SensorControls {
       scope.object.position.x = ax;
       scope.object.position.y = ay + 9.8;
       scope.object.position.z = az;
-      scope.object.updateMatixWorld();
+      scope.object.updateMatrixWorld();
     }
     
     function onDeviceOrientation(event) {
