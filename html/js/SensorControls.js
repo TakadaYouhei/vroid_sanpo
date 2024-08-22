@@ -11,6 +11,7 @@ class SensorControls {
     this.dispose = function() {
       window.removeEventListener("devicemotion", onDeviceMotion);
       window.removeEventListener("deviceorientation", onDeviceOrientation);
+      window.removeEventListener("click", onClick);
     }
     
     const scope = this;
@@ -30,8 +31,30 @@ class SensorControls {
       
     }
     
+    function onClick(event) {
+      console.log("onClick");
+      // sensor activate
+      if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
+        window.DeviceMotionEvent.requestPermission()
+                     .then((state) => {
+                       if (state === 'granted') {
+                         // パーミッションを取れた際の処理
+                       } else {
+                         // パーミッションを取れなかった際の処理
+                       }
+                     })
+                     .catch((err) => {
+                       console.error(err.message);
+                     });
+                     
+  } else {
+    // window.DeviceMotionEvent.requestPermissionが無いブラウザでの処理
+  }
+    }
+    
     window.addEventListener("devicemotion", onDeviceMotion);
     window.addEventListener("deviceorientation", onDeviceOrientation);
+    window.addEventListener("click", onClick);
   } // end of constructor
 }
 
