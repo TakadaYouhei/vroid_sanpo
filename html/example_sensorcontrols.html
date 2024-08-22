@@ -24,7 +24,8 @@
       {
         "imports": {
             "three": "./vendor/mrdoob/three.js/three.module.min.js",
-            "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/"
+            "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/",
+            "mylib/": "./js/"
           }
       }
 		</script>
@@ -32,6 +33,7 @@
 		<script type="module">
 			import * as THREE from 'three';
 		  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+      import { SensorControls } from 'mylib/SensorControls.js'
 
 			// renderer
 			const renderer = new THREE.WebGLRenderer();
@@ -73,6 +75,8 @@
       const cube = new THREE.Mesh(geometry, materials);
       scene.add(cube);
 			
+      // sensor に連動して cube を動かす
+      const cubecontrols = new SensorControls(cube, renderer.domElement );
 
 			// helpers
 			const gridHelper = new THREE.GridHelper( 10, 10 );
