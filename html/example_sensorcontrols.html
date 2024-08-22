@@ -15,10 +15,29 @@
 			canvas {
 				display: block;
 			}
+      #btn {
+        width: 200px;
+            height: 50px;
+            font-size: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+      }
+      .scene {
+        display: none
+      }
+      .scene.active {
+        display: block
+      }
 		</style>
 	</head>
 
 	<body>
+    <button id="btn" class="scene active">START</button>
 		<script type="importmap">
       
       {
@@ -35,10 +54,13 @@
 		  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       import { SensorControls } from 'mylib/SensorControls.js'
 
-			// renderer
+			function main() {
+      // renderer
 			const renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			renderer.setPixelRatio( window.devicePixelRatio );
+      renderer.domElement.classList.add('scene');
+      renderer.domElement.classList.add('active');
 			document.body.appendChild( renderer.domElement );
 
 			// camera
@@ -99,6 +121,26 @@
 			}
 
 			animate();
+      
+      } // end of main
+      
+      document.getElementById('btn').addEventListener('click', () => {
+  if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
+    DeviceMotionEvent.requestPermission()
+                     .then((state) => {
+                       if (state === 'granted') {
+                         // パーミッションを取れた際の処理
+                         document.getElementById('btn').classList.remove("active");
+                         main();
+                       } else {
+                         // パーミッションを取れなかった際の処理
+                       }
+                     })
+                     .catch((err) => console.error(err));
+  } else {
+    // window.DeviceMotionEvent.requestPermissionが無いブラウザでの処理
+  }
+});
 		</script>
 	</body>
 </html>
