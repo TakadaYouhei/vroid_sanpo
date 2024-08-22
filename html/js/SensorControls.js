@@ -4,7 +4,7 @@
  * ジャイロと加速度センサーで object の向きと位置をコントロールする
  */
 class SensorControls {
-  constructor( object, domElemnt ) {
+  constructor( object, domElement ) {
     this.object = object;
     this.domElement = domElement;
     
