@@ -11,7 +11,7 @@ class SensorControls {
     this.dispose = function() {
       window.removeEventListener("devicemotion", onDeviceMotion);
       window.removeEventListener("deviceorientation", onDeviceOrientation);
-      window.removeEventListener("click", onClick);
+      window.removeEventListener("touchstart", onClick);
     }
     
     const scope = this;
@@ -54,7 +54,7 @@ class SensorControls {
     
     window.addEventListener("devicemotion", onDeviceMotion);
     window.addEventListener("deviceorientation", onDeviceOrientation);
-    window.addEventListener("click", onClick);
+    window.addEventListener("touchstart", onClick);
   } // end of constructor
 }
 
