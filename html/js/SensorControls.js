@@ -20,13 +20,23 @@ class SensorControls {
     const scope = this;
     
     function onDeviceMotion(event) {
+      if (! scope.deviceOrientationMatrix ){
+        return;
+      }
       const ax = event.accelerationIncludingGravity.x;
       const ay = event.accelerationIncludingGravity.y;
       const az = event.accelerationIncludingGravity.z;
       
-      scope.object.position.x = ax;
-      scope.object.position.y = ay + 9.8;
-      scope.object.position.z = az;
+      const av = new THREE.Vector3(ax, ay, az);
+      const imatrix = new THREE.Matrix4(scope.deviceOrientationMatrix);
+      imatrix.invert();
+      av.applyMatrix4(imatrix);
+      
+      console.log(av.x);
+      
+      scope.object.position.x = av.x;
+      scope.object.position.y = av.y + 9.8;
+      scope.object.position.z = av.z;
       scope.object.updateMatrixWorld();
     }
     
