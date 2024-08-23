@@ -1,5 +1,7 @@
 "use strict";
 
+import * as THREE from 'three';
+
 /*
  * ジャイロと加速度センサーで object の向きと位置をコントロールする
  */
@@ -7,6 +9,7 @@ class SensorControls {
   constructor( object, domElement ) {
     this.object = object;
     this.domElement = domElement;
+    this.deviceOrientationMatrix = null;
     
     this.dispose = function() {
       window.removeEventListener("devicemotion", onDeviceMotion);
@@ -28,7 +31,23 @@ class SensorControls {
     }
     
     function onDeviceOrientation(event) {
+      const alpha = event.alpha; // z軸の回転 (0-360)
+      const beta = event.beta;   // x軸の回転 (-180-180)
+      const gamma = event.gamma; // y軸の回転 (-90-90)
       
+      // 回転行列の計算
+      const euler = new THREE.Euler(
+          beta * THREE.MathUtils.DEG2RAD,
+          gamma * THREE.MathUtils.DEG2RAD,
+          alpha * THREE.MathUtils.DEG2RAD,
+          'YXZ'
+      );
+      const quaternion = new THREE.Quaternion().setFromEuler(euler);
+      const rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
+      
+      scope.object.quaternion.copy(quaternion);
+      
+      scope.deviceOrientationMatrix = rotationMatrix;
     }
     
     function onClick(event) {
