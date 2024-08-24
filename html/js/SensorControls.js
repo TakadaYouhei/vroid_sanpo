@@ -29,10 +29,12 @@ class SensorControls {
       
       const av = new THREE.Vector3(ax, ay, az);
       const imatrix = new THREE.Matrix4(scope.deviceOrientationMatrix);
-      imatrix.invert();
-      av.applyMatrix4(imatrix);
       
-      console.log(av.x);
+      
+      imatrix.invert();
+      
+      
+      av.applyMatrix4(imatrix);
       
       scope.object.position.x = av.x;
       scope.object.position.y = av.y + 9.8;
@@ -62,23 +64,8 @@ class SensorControls {
     
     function onClick(event) {
       console.log("onClick");
-      // sensor activate
-      if (window.DeviceMotionEvent && window.DeviceMotionEvent.requestPermission) {
-        window.DeviceMotionEvent.requestPermission()
-                     .then((state) => {
-                       if (state === 'granted') {
-                         // パーミッションを取れた際の処理
-                       } else {
-                         // パーミッションを取れなかった際の処理
-                       }
-                     })
-                     .catch((err) => {
-                       console.error(err.message);
-                     });
-                     
-  } else {
-    // window.DeviceMotionEvent.requestPermissionが無いブラウザでの処理
-  }
+      console.log(scope.deviceOrientationMatrix.elements);
+      
     }
     
     window.addEventListener("devicemotion", onDeviceMotion);
