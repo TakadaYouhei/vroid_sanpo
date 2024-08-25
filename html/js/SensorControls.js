@@ -28,7 +28,7 @@ class SensorControls {
       const az = event.accelerationIncludingGravity.z;
       
       const av = new THREE.Vector3(ax, ay, az);
-      const imatrix = new THREE.Matrix4(scope.deviceOrientationMatrix);
+      const imatrix = new THREE.Matrix4().copy(scope.deviceOrientationMatrix);
       
       
       imatrix.invert();
@@ -60,6 +60,9 @@ class SensorControls {
       scope.object.quaternion.copy(quaternion);
       
       scope.deviceOrientationMatrix = rotationMatrix;
+      
+      const invmatrix = new THREE.Matrix4().copy(rotationMatrix).invert();
+      //console.log(invmatrix.elements);
     }
     
     function onClick(event) {
