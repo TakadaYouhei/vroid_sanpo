@@ -23,6 +23,11 @@ class SensorControls {
       if (! scope.deviceOrientationMatrix ){
         return;
       }
+      
+      // acceleration は右手座標系
+      // x : 西から東に向かう
+      // y : 南から北に向かう
+      // z : 下から上に向かう
       const ax = event.accelerationIncludingGravity.x;
       const ay = event.accelerationIncludingGravity.y;
       const az = event.accelerationIncludingGravity.z;
@@ -34,10 +39,10 @@ class SensorControls {
       imatrix.invert();
       
       
-      av.applyMatrix4(imatrix);
+      //av.applyMatrix4(imatrix);
       
       scope.object.position.x = av.x;
-      scope.object.position.y = av.y + 9.8;
+      scope.object.position.y = av.y;
       scope.object.position.z = av.z;
       scope.object.updateMatrixWorld();
     }
@@ -50,8 +55,8 @@ class SensorControls {
       // 回転行列の計算
       const euler = new THREE.Euler(
           beta * THREE.MathUtils.DEG2RAD,
-          gamma * THREE.MathUtils.DEG2RAD,
-          alpha * THREE.MathUtils.DEG2RAD,
+          0, //gamma * THREE.MathUtils.DEG2RAD,
+          0, //alpha * THREE.MathUtils.DEG2RAD,
           'YXZ'
       );
       const quaternion = new THREE.Quaternion().setFromEuler(euler);
