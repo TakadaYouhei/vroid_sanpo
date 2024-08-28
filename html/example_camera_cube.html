@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<!-- https://qiita.com/hibit/items/0d119d171bcbe3b2c1c5 -->
+<head>
+		<style>
+			body {
+				margin: 0;
+			}
+			canvas {
+				display: block;
+			}
+		</style>
+</head>
+
+<body>
+    <!--
+    <script src="three.js"></script>
+    <script src="GLTFLoader.js"></script>
+    <script src="three-vrm.js"></script>
+  -->
+    <script type="importmap">
+    {
+      "imports": {
+          "three": "./vendor/mrdoob/three.js/three.module.min.js",
+          "three/addons/": "./vendor/mrdoob/three.js/examples/jsm/",
+          "@pixiv/three-vrm": "./vendor/pixiv/three-vrm/three-vrm.module.min.js"
+      }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { VRMCoreLoaderPlugin } from '@pixiv/three-vrm';
+        //import { VRMSchema } from "@pixiv/three-vrm";
+        
+        const logHumanoidBones = (vrm) => {
+          console.log('logHumanoidBones called.')
+          if (!vrm) {
+            console.log('vrm is null.')
+            return
+          }
+          console.log('vrm is not null.')
+          if (!vrm.humanoid) {
+            console.log('vrm.humanoid is null')
+            return
+          }
+          console.log('humanoid is not null.')
+          if (!vrm.humanoid.humanBones) {
+            console.log('vrm.humanoid.humanBones is null.')
+            return
+          }
+          console.log('humanBones is not null.')
+          const bones = vrm.humanoid.humanBones;
+          console.log(typeof bones)
+          console.log(bones.length)
+          for (const bone in bones) {
+            console.log(bone + ':' + bones[bone].name)
+          }
+          console.log('logHumanoidBones finished.')
+        }
+        
+        const logHumanoidNormalizedBones = (vrm) => {
+          console.log('logHumanoidNormalizedBones called.')
+          if (!vrm) {
+            console.log('vrm is null.')
+            return
+          }
+          console.log('vrm is not null.')
+          if (!vrm.humanoid) {
+            console.log('vrm.humanoid is null')
+            return
+          }
+          console.log('humanoid is not null.')
+          if (!vrm.humanoid.humanNormalizedBones) {
+            console.log('vrm.humanoid.humanNormalizedBones is null.')
+            return
+          }
+          console.log('humanBones is not null.')
+          const bones = vrm.humanoid.humanNormalizedBones;
+          console.log(typeof bones)
+          console.log(bones.length)
+          for (const bone in bones) {
+            console.log(bone + ':' + bones[bone].name)
+          }
+          console.log('logHumanoidNormalizedBones finished.')
+        }
+        
+        // シーンの準備
+        const scene = new THREE.Scene();
+        
+        
+        // カメラの準備
+        const camera = new THREE.PerspectiveCamera(
+                30, 
+                window.innerWidth / window.innerHeight, 
+                0.1, 1000)
+        camera.position.set(0, 1.2, -1.0)
+        camera.rotation.set(0, Math.PI, 0)
+        
+        
+
+
+        // レンダラーの準備
+        const renderer = new THREE.WebGLRenderer()
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setPixelRatio( window.devicePixelRatio );
+        document.body.appendChild(renderer.domElement)
+
+        // ライトの準備
+        const directionalLight = new THREE.DirectionalLight('#ffffff', 1)
+        directionalLight.position.set(1, 1, 1)
+        scene.add(directionalLight)
+
+        let currentGltf = undefined;
+        
+        const loader = new GLTFLoader();
+        
+        loader.register((parser)=>{
+          return new VRMCoreLoaderPlugin(parser, { helperRoot: scene, autoUpdateHumanBones: true });
+        })
+        
+        loader.load(
+
+            // URL of the VRM you want to load
+            'asset/data01.vrm',
+
+            // called when the resource is loaded
+            (gltf) => {
+              
+              //console.log('gltf loaded.');
+              //console.log(typeof(gltf));
+              //console.log(typeof(gltf.userData));
+
+                // generate a VRM instance from gltf
+                const vrm = gltf.userData.vrmCore;
+                //console.log('vrm');
+
+                    // add the loaded vrm to the scene
+                    scene.add(gltf.scene);
+
+                    // deal with vrm features
+                    //console.log(vrm);
+                    normalPose(vrm);
+                    //logHumanoidBones(vrm)
+                    //logHumanoidNormalizedBones(vrm)
+
+                    // 筆者追記、両手を下ろす
+                    //意味なし//vrm.update()
+                    //意味なし//vrm.humanoid.normalizedHumanBones();
+                    //normalPose(vrm);
+                    //console.log('normalPoseed.');
+
+                    // 筆者追記、笑顔に
+                    //vrm.blendShapeProxy.setValue(THREE.VRMSchema.BlendShapePresetName.Joy, 1.0)
+                    //vrm.blendShapeProxy.update()
+
+                    currentGltf = gltf;
+                    
+                    //console.log('currentGltf setted.')
+                  
+
+            },
+            // called while loading is progressing
+            (progress) => {
+              //console.log('Loading model...', 100.0 * (progress.loaded / progress.total), '%');
+            },
+
+            // called when loading has errors
+            (error) => {
+              console.log('on error');
+              console.log(typeof error)
+              console.log(Object.getOwnPropertyNames(error))
+              console.log(error.message)
+              console.log(error.stack)
+              //console.error(error);
+            }
+
+        )
+        
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(stream => {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+      
+          // VideoTextureの作成
+          const videoTexture = new THREE.VideoTexture(video);
+      
+          // シーンの背景に設定
+          scene.background = videoTexture;
+        })
+        .catch(error => {
+          console.error('Error accessing media devices.', error);
+        });
+
+        
+        const normalPose = (vrm) => {
+          //console.log("normalPose");
+          let leftUpperArm = vrm.humanoid.getNormalizedBoneNode("leftUpperArm")
+          if (leftUpperArm){
+              leftUpperArm.rotation.z = 1.2;
+              const rightUpperArm = vrm.humanoid.getNormalizedBoneNode("rightUpperArm")
+              rightUpperArm.rotation.z = -1.2;
+          }
+          vrm.humanoid.update()
+          //console.log("normalPose finished.")
+        }
+
+
+        // アニメーションループの開始
+        function tick() {
+            
+            
+            if (currentGltf){
+              //normalPose(currentGltf.userData.vrmCore)
+              //return
+            }
+            
+            requestAnimationFrame(tick)
+            
+            renderer.render(scene, camera)
+        }
+        tick()
+    </script>
+</body>
+
+</html>
