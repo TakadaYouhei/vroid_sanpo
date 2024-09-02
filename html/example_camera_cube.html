@@ -73,7 +73,25 @@
       const cube = new THREE.Mesh(geometry, materials);
       scene.add(cube);
 			
-
+        navigator.mediaDevices.getUserMedia({ video: {
+          facingMode: { exact: "environment" },
+        },
+        audio: false })
+        .then(stream => {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+      
+          // VideoTextureの作成
+          const videoTexture = new THREE.VideoTexture(video);
+      
+          // シーンの背景に設定
+          scene.background = videoTexture;
+        })
+        .catch(error => {
+          console.error('Error accessing media devices.', error);
+        });
+        
 			// helpers
 			const gridHelper = new THREE.GridHelper( 10, 10 );
 			scene.add( gridHelper );
