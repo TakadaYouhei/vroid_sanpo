@@ -25,12 +25,20 @@ class SensorControls {
       }
       
       // acceleration は右手座標系
+      //のmdn document 情報
       // x : 西から東に向かう
       // y : 南から北に向かう
       // z : 下から上に向かう
-      const ax = event.accelerationIncludingGravity.x;
-      const ay = event.accelerationIncludingGravity.y;
-      const az = event.accelerationIncludingGravity.z;
+      
+      // three は左手座標系なので変換している
+      const az = event.acceleration.x;
+      const ax = -event.acceleration.y;
+      const ay = event.acceleration.z;
+      
+      // accelerationIncludingGravity は加速度計の生データ
+      //const ax = event.accelerationIncludingGravity.x;
+      //const ay = event.accelerationIncludingGravity.y;
+      //const az = event.accelerationIncludingGravity.z;
       
       const av = new THREE.Vector3(ax, ay, az);
       const imatrix = new THREE.Matrix4().copy(scope.deviceOrientationMatrix);
