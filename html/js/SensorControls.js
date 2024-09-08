@@ -30,10 +30,16 @@ class SensorControls {
       // y : 南から北に向かう
       // z : 下から上に向かう
       
+      // ipad の挙動
+      // z : 画面方向がマイナス。画面裏方向がプラス
+      
       // three は左手座標系なので変換している
-      const az = event.acceleration.x;
-      const ax = -event.acceleration.y;
-      const ay = event.acceleration.z;
+      // ay : 画面方向がプラス。
+      // ax : 画面向かって右方向がプラス
+      // az : 画面向かって手前がプラス
+      const ax = -event.acceleration.x;
+      const az = event.acceleration.y;
+      const ay = -event.acceleration.z;
       
       // accelerationIncludingGravity は加速度計の生データ
       //const ax = event.accelerationIncludingGravity.x;
