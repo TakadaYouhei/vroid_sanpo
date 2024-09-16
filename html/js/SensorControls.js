@@ -20,7 +20,7 @@ class SensorControls {
     const scope = this;
     
     function onDeviceMotion(event) {
-      if (! scope.deviceOrientationMatrix ){
+      if (true || ! scope.deviceOrientationMatrix ){
         return;
       }
       
