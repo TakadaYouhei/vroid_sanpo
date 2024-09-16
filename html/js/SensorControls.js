@@ -83,8 +83,9 @@ class SensorControls {
       // 回転行列の計算
       const euler = new THREE.Euler(
           beta * THREE.MathUtils.DEG2RAD,
-          0, //gamma * THREE.MathUtils.DEG2RAD,
-          0, //alpha * THREE.MathUtils.DEG2RAD,
+          alpha * THREE.MathUtils.DEG2RAD,
+          gamma * THREE.MathUtils.DEG2RAD,
+
           'YXZ'
       );
       const quaternion = new THREE.Quaternion().setFromEuler(euler);
