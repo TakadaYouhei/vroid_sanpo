@@ -10,6 +10,7 @@ class SensorControls {
     this.object = object;
     this.domElement = domElement;
     this.deviceOrientationMatrix = null;
+    this._isDeviceMotionEnabled = true;
     
     this.dispose = function() {
       window.removeEventListener("devicemotion", onDeviceMotion);
@@ -19,8 +20,21 @@ class SensorControls {
     
     const scope = this;
     
+    this.enableDeviceMotion = function() {
+      scope._isDeviceMotionEnabled = true;
+      console.log('haha')
+    }
+    
+    this.disableDeviceMotion = function() {
+      scope._isDeviceMotionEnabled = false;
+    }
+    
+    this.isDeviceMotionEnabled = function() {
+      return scope._isDeviceMotionEnabled;
+    }
+    
     function onDeviceMotion(event) {
-      if (true || ! scope.deviceOrientationMatrix ){
+      if (!scope.isDeviceMotionEnabled() || ! scope.deviceOrientationMatrix ){
         return;
       }
       

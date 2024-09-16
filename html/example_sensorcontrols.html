@@ -98,6 +98,7 @@
 			
       // sensor に連動して cube を動かす
       const cubecontrols = new SensorControls(cube, renderer.domElement );
+      cubecontrols.disableDeviceMotion();
 
 			// helpers
 			const gridHelper = new THREE.GridHelper( 20, 20 );
