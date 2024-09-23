@@ -84,7 +84,7 @@ class SensorControls {
       const euler = new THREE.Euler(
           beta * THREE.MathUtils.DEG2RAD,
           alpha * THREE.MathUtils.DEG2RAD,
-          gamma * THREE.MathUtils.DEG2RAD,
+          -gamma * THREE.MathUtils.DEG2RAD,
 
           'YXZ'
       );
