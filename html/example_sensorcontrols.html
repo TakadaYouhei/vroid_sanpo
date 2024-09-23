@@ -95,6 +95,9 @@
       // キューブメッシュを作成
       const cube = new THREE.Mesh(geometry, materials);
       scene.add(cube);
+      
+      const cubeAxes = new THREE.AxesHelper( 2 );
+      cube.add( cubeAxes );
 			
       // sensor に連動して cube を動かす
       const cubecontrols = new SensorControls(cube, renderer.domElement );
