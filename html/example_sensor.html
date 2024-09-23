@@ -23,12 +23,14 @@
       var alpha = event.alpha;
       var beta = event.beta;
       var gamma = event.gamma;
+      var absolute = event.absolute;
 
       var result2 = document.getElementById( "result_gyro" );
       result2.innerHTML = "ジャイロセンサー<br />" +
         "alpha：" + alpha.toFixed(2) +"°<br />" +
         "beta ：" + beta.toFixed(2)  +"°<br />" + 
-        "gamma：" + gamma.toFixed(2) +"°<br />";
+        "gamma：" + gamma.toFixed(2) +"°<br />" +
+        "absolute : " + absolute + "<br />";
     }, false);
 
   </script>
