@@ -98,7 +98,20 @@
       
       const cubeAxes = new THREE.AxesHelper( 2 );
       cube.add( cubeAxes );
-			
+      
+      // ダミーのオブジェクト
+      const dummy = new THREE.Object3D();
+      cube.add(dummy);
+      
+      const dummyAxes = new THREE.AxesHelper( 2 );
+      dummy.add( cubeAxes );
+      
+      // その先
+      const g2 = new THREE.BoxGeometry(0.25, 0.25, 0.25);
+			const c2 = new THREE.Mesh(g2);
+      dummy.add(c2);
+      c2.position.y = 1.2;
+      
       // sensor に連動して cube を動かす
       const cubecontrols = new SensorControls(cube, renderer.domElement );
       cubecontrols.disableDeviceMotion();
