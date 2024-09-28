@@ -11,6 +11,7 @@ class SensorControls {
     this.domElement = domElement;
     this.deviceOrientationMatrix = null;
     this._isDeviceMotionEnabled = true;
+    this._testObject = null;
     
     this.dispose = function() {
       window.removeEventListener("devicemotion", onDeviceMotion);
@@ -31,6 +32,10 @@ class SensorControls {
     
     this.isDeviceMotionEnabled = function() {
       return scope._isDeviceMotionEnabled;
+    }
+    
+    this.setTestObject = function (obj) {
+      scope._testObject = obj;
     }
     
     function onDeviceMotion(event) {
@@ -97,6 +102,10 @@ class SensorControls {
       
       const invmatrix = new THREE.Matrix4().copy(rotationMatrix).invert();
       //console.log(invmatrix.elements);
+      
+      if (scope._testObject) {
+        scope._testObject.matrix.copy(invmatrix);
+      }
     }
     
     function onClick(event) {

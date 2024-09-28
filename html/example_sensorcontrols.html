@@ -102,6 +102,7 @@
       // ダミーのオブジェクト
       const dummy = new THREE.Object3D();
       cube.add(dummy);
+      dummy.matrixAutoUpdate =false;
       
       const dummyAxes = new THREE.AxesHelper( 2 );
       dummy.add( cubeAxes );
@@ -115,6 +116,7 @@
       // sensor に連動して cube を動かす
       const cubecontrols = new SensorControls(cube, renderer.domElement );
       cubecontrols.disableDeviceMotion();
+      cubecontrols.setTestObject(dummy);
 
 			// helpers
 			const gridHelper = new THREE.GridHelper( 20, 20 );
